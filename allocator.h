@@ -14,7 +14,7 @@ Allocator *allocator_init();
 
 void *allocator_alloc(Allocator *alloc, size_t size);
 
-void allocator_free(Allocator *alloc);
+void allocator_freeAll(Allocator *alloc);
 
 void allocator_destroy(Allocator *alloc);
 

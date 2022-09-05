@@ -10,13 +10,13 @@ Allocator *allocator_init() {
 	return alloc;
 }
 
-void allocator_grow(Allocator *alloc) {
+static void allocator_grow(Allocator *alloc) {
 	size_t new_size = alloc->list.buffer_size * 2;
 	alloc->list.buffer = realloc(alloc->list.buffer, new_size);
 	alloc->list.buffer_size = new_size;
 }
 
-void allocator_add_pointer(Allocator *alloc, long ptr) {
+static void allocator_add_pointer(Allocator *alloc, long ptr) {
 	if (alloc->list.size >= alloc->list.buffer_size)
 		allocator_grow(alloc);
 	alloc->list.buffer[alloc->list.size] = ptr;
@@ -29,7 +29,7 @@ void *allocator_alloc(Allocator *alloc, size_t size) {
 	return ptr;
 }
 
-void allocator_free(Allocator *alloc) {
+void allocator_freeAll(Allocator *alloc) {
 	for (int i = 0; i != alloc->list.size; i++) {
 		free((void*) alloc->list.buffer[i]);
 	}
@@ -38,7 +38,7 @@ void allocator_free(Allocator *alloc) {
 }
 
 void allocator_destroy(Allocator *alloc) {
-	allocator_free(alloc);
+	allocator_freeAll(alloc);
 	free(alloc->list.buffer);
 	free(alloc);
 }
