@@ -5,7 +5,7 @@
 typedef struct Allocator {
 	struct AllocList {
 		size_t size;
-		long *buffer;
+		void **buffer;
 		size_t buffer_size;
 	} list;
 } Allocator;
