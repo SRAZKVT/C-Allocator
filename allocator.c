@@ -11,7 +11,7 @@ Allocator *allocator_init() {
 		return NULL;
 	}
 	alloc->list.size = 0;
-	alloc->list.buffer = malloc(sizeof(void *) * 16);
+	alloc->list.buffer = calloc(16, sizeof(void *));
 	if (!alloc->list.buffer) {
 		fprintf(stderr, "Unable to initialise internal buffer for allocator");
 		free(alloc);
@@ -33,8 +33,17 @@ static void allocator_grow(Allocator *alloc) {
 static void allocator_add_pointer(Allocator *alloc, void *ptr) {
 	if (alloc->list.size >= alloc->list.buffer_size)
 		allocator_grow(alloc);
-	alloc->list.buffer[alloc->list.size] = ptr;
-	alloc->list.size++;
+	for (int i = 0; i != alloc->list.size; i++) {
+		if (alloc->list.buffer[i] == NULL) {
+			alloc->list.buffer[i] = ptr;
+			ptr = NULL;
+			break;
+		}
+	}
+	if (ptr != NULL) {
+		alloc->list.buffer[alloc->list.size] = ptr;
+		alloc->list.size++;
+	}
 }
 
 void *allocator_alloc(Allocator *alloc, size_t size) {
