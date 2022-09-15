@@ -44,9 +44,18 @@ void *allocator_alloc(Allocator *alloc, size_t size) {
 	return ptr;
 }
 
+void allocator_free(Allocator *alloc, void *ptr) {
+	for (int i = 0; i != alloc->list.size; i++)
+		if (alloc->list.buffer[i] == ptr) {
+				free(ptr);
+				alloc->list.buffer[i] = NULL;
+		}
+}
+
 void allocator_freeAll(Allocator *alloc) {
-	for (int i = 0; i != alloc->list.size; i++) 
-		free((void*) alloc->list.buffer[i]);
+	for (int i = 0; i != alloc->list.size; i++)
+		if (alloc->list.buffer[i] != NULL)
+			free(alloc->list.buffer[i]);
 	memset(alloc->list.buffer, 0, alloc->list.size * sizeof(long));
 	alloc->list.size = 0;
 }

@@ -29,6 +29,15 @@ Allocator *allocator_init();
 void *allocator_alloc(Allocator *alloc, size_t size);
 
 /**
+ * Free a single pointer within the allocator.
+ * If the pointer hasn't been allocated by this allocator, then this function will have no effect on the allocator.
+ * 
+ * @param alloc the instanciated allocator to free a pointer from
+ * @param ptr the pointer to free from the allocator
+ */
+void allocator_free(Allocator *alloc, void *ptr);
+
+/**
  * Free all pointers stored within the allocator, essentially resetting it. Allows to use an allocator in a loop, and have all memory needed within the loop freed by this function. Is implicitely called by allocator_destroy, so call this function before isn't necessary.
  * 
  * @param alloc the instanciated allocator to reset
